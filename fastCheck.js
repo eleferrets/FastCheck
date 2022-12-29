@@ -59,20 +59,83 @@ app.get('/url', (req, res) => {
   
   app.post('/url', encodeUrl, (req, res) => {
     console.log('Form request:', req.body)
-   
-	const sdk = require('api')('@verbwire/v1.0#hr2s143dl9hbr7s9');
-  
 
+    const sdk = require('api')('@verbwire/v1.0#hr2s143dl9hbr7s9');
+  let response = []
+  let slug = req.body['slug']
+  let chain = req.body['chain']
   sdk.auth(API_KEY);
   sdk.get('/nft/data/ownershipForSlug', {
-    slug: 'azuki',
-    chain: 'ethereum',
-    limit: '1',
+    slug,
+    chain,
+    limit: '10',
     page: '1',
     sortDirection: 'DESC'
   })
-    .then(res =>  console.log(`${JSON.stringify(res)}`))
-    .catch(err => console.error(err));
+    .then(ret =>  { 
+          const fs = require('fs');
 
+    let content = `<!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+      </head>
+      <body>
+        <div class="container">
+          <h2>Results</h2>`;
+          fs.writeFile(__dirname + '/form3.html', content, err => {
+            if (err) {
+              console.error(err);
+            }
+            console.log("Hi1")
+          });
+      response = ret["ownership"]["results"]
+      console.log(response)
+for (const element of response) {
+  console.log("Hi2")
+
+  content = `
+  <div class="card w-50">
+  <div class="card-body">
+    <h5 class="card-title">Slug: ${slug.toUpperCase()}</h5>
+    <p class="card-text">Chain: ${element["chain"].charAt(0).toUpperCase() + element["chain"].slice(1)}</p>
+    <p class="card-text">Token Count: ${element["tokenCount"]}</p>
+    <p class="card-text">Top Bid Amount: ${element["topBidValue"]}</p>
+    <p class="card-text">Total Bid Amount: ${element["totalBidValue"]}</p>
+  </div>
+</div>
+  `;
+  fs.appendFile(__dirname + '/form3.html', content, err => {
+    if (err) {
+      console.error(err);
+    }
+    console.log("Hi3")
+
+  });
+}
+
+    content = `</body>
+    </html>`;
+
+
+
+    fs.appendFile(__dirname + '/form3.html', content, err => {
+      if (err) {
+        console.error(err);
+      }
+      console.log("Hi4")
+
+    });
+    console.log("Hi5")
+
+    res.redirect('/results');
+    })
+    .catch(err => console.error(err));
+  })
+  app.get('/results', (req, res) => {
+    res.sendFile(__dirname + '/form3.html')
   })
 app.listen(8080)
