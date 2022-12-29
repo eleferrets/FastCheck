@@ -14,50 +14,104 @@ const FormData = require('form-data');
 var multipart = require('connect-multiparty')
 var multipartmiddleware = multipart();
 
-app.get('/image', (req, res) => {
+app.get('/owner', (req, res) => {
   res.sendFile(__dirname + '/form.html')
 })
+app.post('/owner', encodeUrl, (req, res) => {
+  console.log('Form request:', req.body)
 
-app.post('/image',multipartmiddleware, (req, res) => { 
-  
+  // New function that takes element and owner or slug
+  // New button that calls results endpoint to increase the page and include Results: page # for slug only, otherwise results for the other
+  // Add another message if there is are no results
+  // Add mx-auto to card
+  // Refactor js file and add spacing to the cards, fields
+  // Redo the readme and do the presenting stuff
+  const sdk = require('api')('@verbwire/v1.0#hr2s143dl9hbr7s9');
+let response = []
+let walletAddress = req.body['owner']
+let chain = req.body['chain']
+sdk.auth(API_KEY);
+sdk.get('/nft/data/transactions', 
+        {
+  				walletAddress, 
+  			  chain
+				})
+  .then(ret =>  { 
 
-// axios
-var data = new FormData();
-data.append('allowPlatformToOperateToken', req.body.allowPlatformToOperateToken);
-data.append('chain', req.body.chain);
-data.append('recipientAddress', req.body.recipientAddress);
-data.append('filePath', fs.createReadStream(req.files.filePath.path));
-data.append('name', req.body.name);
-data.append('description', req.body.description);
+  let content = `<!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <title></title>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body>
+      <div class="container">
+        <h2>Results</h2>`;
+        fs.writeFile(__dirname + '/form3.html', content, err => {
+          if (err) {
+            console.error(err);
+          }
+          console.log("Hi1")
+        });
+    response = ret["nft_transactions"]
+    console.log(response)
+for (const element of response) {
+console.log("Hi2")
 
-var config = {
-  method: 'post',
-  url: 'https://api.verbwire.com/v1/nft/mint/quickMintFromFile',
-  headers: { 
-    'X-API-Key': API_KEY, 
-    ...data.getHeaders()
-  },
-  data : data
-};
+content = `
+<div class="card w-50">
+<div class="card-body">
+  <h5 class="card-title">Owner: ${walletAddress.toUpperCase()}</h5>
+  <p class="card-text">Contact Address: ${element["contractAddress"]}</p>
+  <p class="card-text">From: ${element["from"]}</p>
+  <p class="card-text">To: ${element["to"]}</p>
+  <p class="card-text">Token ID: ${element["tokenID"]}</p>
+  <p class="card-text">Token Name: ${element["tokenName"]}</p>
+  <p class="card-text">Token Symbol: ${element["tokenSymbol"]}</p>
+  <p class="card-text">Token Decimal: ${element["tokenDecimal"]}</p>
+  <p class="card-text">Transaction Index: ${element["transactionIndex"]}</p>
+  <p class="card-text">Gas: ${element["gas"]}</p>
+  <p class="card-text">Gas Price: ${element["gasPrice"]}</p>
+  <p class="card-text">Gas Used: ${element["gasgasUsed"]}</p>
+</div>
+</div>
+`;
+fs.appendFile(__dirname + '/form3.html', content, err => {
+  if (err) {
+    console.error(err);
+  }
+  console.log("Hi3")
 
-console.log("data",data);
-
-axios(config)
-.then(function (response) {
-  console.log(JSON.stringify(response.data));
-  res.send(JSON.stringify(response.data))
-})
-.catch(function (error) {
-  console.log(error);
 });
+}
 
+  content = `</body>
+  </html>`;
+
+
+
+  fs.appendFile(__dirname + '/form3.html', content, err => {
+    if (err) {
+      console.error(err);
+    }
+    console.log("Hi4")
+
+  });
+  console.log("Hi5")
+
+  res.redirect('/results');
+  })
+  .catch(err => console.error(err));
 })
 
-app.get('/url', (req, res) => {
+
+app.get('/slug', (req, res) => {
     res.sendFile(__dirname + '/form2.html')
   })
   
-  app.post('/url', encodeUrl, (req, res) => {
+  app.post('/slug', encodeUrl, (req, res) => {
     console.log('Form request:', req.body)
 
     const sdk = require('api')('@verbwire/v1.0#hr2s143dl9hbr7s9');
@@ -73,7 +127,6 @@ app.get('/url', (req, res) => {
     sortDirection: 'DESC'
   })
     .then(ret =>  { 
-          const fs = require('fs');
 
     let content = `<!DOCTYPE html>
     <html lang="en">
