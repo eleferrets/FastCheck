@@ -52,7 +52,6 @@ function generateHTML(req, res, data, url) {
     response = data["nft_transactions"];
   }
   for (const element of response) {
-    console.log(element)
     if (slugTog) {
       content = `
   <div class="card w-50 mb-3">
@@ -90,15 +89,12 @@ function generateHTML(req, res, data, url) {
       }
     });
   }
-  console.log(response)
   if (!response.length) {
     content = `<p class="text-center">Nothing here!</p>`;
     fs.appendFileSync(__dirname + "/form3.html", content, (err) => {
       if (err) {
         console.error(err);
       }
-  console.log("Written")
-
     });
   }
 
