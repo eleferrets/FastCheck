@@ -10,7 +10,7 @@ This simple checking app was built using the Verbwire API. The app lets you chec
 
 ## Steps to run program locally
 1. Checkout the "local" branch
-2. Create a .env file and "YOUR API KEY GOES HERE" with your actual API key. See image in the additional section below.
+2. Create a .env file and add an entry for API_KEY with your API Key in the form, "YOUR API KEY GOES HERE", with your actual API key. See image in the additional section below.
 
 ![image](https://user-images.githubusercontent.com/40572853/210030228-1dcd452d-0a9e-4b94-965d-fad26fa1b5a5.png)
 
