@@ -3,7 +3,7 @@
 </div>
 
 # fastCheck
-This simple checking app was built using the Verbwire API. The app lets you check the owners of an NFT using the slug identifier, and the app also allows for checking all the transactions of a specific wallet address in a supported blockchain. For more details on using the Verbwire API you can access the full API docs [here](https://docs.verbwire.com/docs)
+This simple checking app was built using the Verbwire API. The app lets you check the owners of an NFT using the slug identifier, and the app also allows for checking all the transactions of a specific wallet address in a supported blockchain. The app uses express and two forms that generate a third website to show the results. For more details on using the Verbwire API you can access the full API docs [here](https://docs.verbwire.com/docs)
 
 ## Requirements
 1. You'll need a Verbwire API Key. You can get a free API key [HERE](https://www.verbwire.com/auth/register)
