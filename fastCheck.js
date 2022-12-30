@@ -35,15 +35,13 @@ function generateHTML(req, res, data, url) {
     <body>
       <div class="container">`;
   if (slugTog) {
-    content += `<h2>Results For ${slug.toUpperCase()} On ${
-      chain.charAt(0).toUpperCase() + chain.slice(1)
-    } Chain</h2>`;
+    content += `<h2>Results For ${slug.toUpperCase()} On ${chain.charAt(0).toUpperCase() + chain.slice(1)} Chain</h2>`;
   } else if (ownerTog) {
     content += `<h2>Results For ${walletAddress.toUpperCase()}</h2>`;
   }
-  content += `<a class="btn btn-info" href="${link}" role="button">Back</a>`;
+  content += `<a class="btn btn-info mb-3" href="${link}" role="button">Back</a>`;
 
-  fs.writeFile(__dirname + "/form3.html", content, (err) => {
+  fs.writeFileSync(__dirname + "/form3.html", content, (err) => {
     if (err) {
       console.error(err);
     }
@@ -54,9 +52,10 @@ function generateHTML(req, res, data, url) {
     response = data["nft_transactions"];
   }
   for (const element of response) {
+    console.log(element)
     if (slugTog) {
       content = `
-  <div class="card w-50">
+  <div class="card w-50 mb-3">
   <div class="card-body">
     <h5 class="card-title">${slug.toUpperCase()}</h5>
     <p class="card-text">Token Count: ${element["tokenCount"]}</p>
@@ -67,7 +66,7 @@ function generateHTML(req, res, data, url) {
   `;
     } else if (ownerTog) {
       content = `
-  <div class="card w-75">
+  <div class="card w-75 mb-3">
   <div class="card-body">
     <h5 class="card-title">Owner: ${walletAddress.toUpperCase()}</h5>
     <p class="card-text">Contact Address: ${element["contractAddress"]}</p>
@@ -85,26 +84,28 @@ function generateHTML(req, res, data, url) {
   </div>
   `;
     }
-    fs.appendFile(__dirname + "/form3.html", content, (err) => {
+    fs.appendFileSync(__dirname + "/form3.html", content, (err) => {
       if (err) {
         console.error(err);
       }
     });
   }
-
+  console.log(response)
   if (!response.length) {
     content = `<p class="text-center">Nothing here!</p>`;
-    fs.appendFile(__dirname + "/form3.html", content, (err) => {
+    fs.appendFileSync(__dirname + "/form3.html", content, (err) => {
       if (err) {
         console.error(err);
       }
+  console.log("Written")
+
     });
   }
 
   content = `</body>
   </html>`;
 
-  fs.appendFile(__dirname + "/form3.html", content, (err) => {
+  fs.appendFileSync(__dirname + "/form3.html", content, (err) => {
     if (err) {
       console.error(err);
     }
@@ -121,7 +122,6 @@ app.post("/owner", encodeUrl, (req, res) => {
   // Refactor js file and add spacing to the cards, fields
   // Redo the readme and do the presenting stuff
   const sdk = require("api")("@verbwire/v1.0#hr2s143dl9hbr7s9");
-  let response = [];
   let walletAddress = req.body["owner"];
   let chain = req.body["chain"].toLowerCase();
   sdk.auth(API_KEY);
