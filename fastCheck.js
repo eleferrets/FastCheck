@@ -47,16 +47,13 @@ function generateHTML(req, res, data, url) {
     if (err) {
       console.error(err);
     }
-    console.log("Hi1");
   });
   if (slugTog) {
     response = data["ownership"]["results"];
   } else if (ownerTog) {
     response = data["nft_transactions"];
   }
-  console.log(response);
   for (const element of response) {
-    console.log("Hi2");
     if (slugTog) {
       content = `
   <div class="card w-50">
@@ -92,7 +89,6 @@ function generateHTML(req, res, data, url) {
       if (err) {
         console.error(err);
       }
-      console.log("Hi3");
     });
   }
 
@@ -102,7 +98,6 @@ function generateHTML(req, res, data, url) {
       if (err) {
         console.error(err);
       }
-      console.log("Hi4s");
     });
   }
 
@@ -113,9 +108,7 @@ function generateHTML(req, res, data, url) {
     if (err) {
       console.error(err);
     }
-    console.log("Hi4");
   });
-  console.log("Hi5");
   res.redirect("/results");
 }
 
